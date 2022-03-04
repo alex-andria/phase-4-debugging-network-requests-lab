@@ -63,11 +63,35 @@ developing your own process.
 - Add a new toy when the toy form is submitted
 
   - How I debugged:
+    1. submitted toy with console open. 
+    2. saw 500 error and opened Network tab to check toys post Preview and Header tabs.
+    3. Saw exception: "#<NameError: uninitialized constant ToysController::Toys>" and found that it was indeed an Internal Server Error.
+    4. Entered byebug in the create method of toys_controller.rb
+    5. Found that the create method was accidentally pluralized for Toy.create.
+    6. Posted once more to double check server is working.
+
 
 - Update the number of likes for a toy
 
   - How I debugged:
+    1. Clicked on like button. Checked console to see 
+      "localhost/:1 Uncaught (in promise) SyntaxError: Unexpected end of JSON input
+        at main.chunk.js:378:20
+        (anonymous) @ ToyCard.js:21"
+    2. Checked network to find that Status C ode 204 No Content
+    3. SyntaxError signaled that it is a JSON parsing error and that I'll need to check in the controller actions for
+    4. put in byebug in update and check params when liking:
+      (byebug) params
+      #<ActionController::Parameters {"likes"=>9, "controller"=>"toys", "action"=>"update", "id"=>"1"} permitted: false>
+      (byebug) 
+    5. Understood that toy was being updated but the JSON response wasn't being rendered.
+
 
 - Donate a toy to Goodwill (and delete it from our database)
 
   - How I debugged:
+    1. Saw 404 error on console.
+    2. Checked network preview and saw Error not Found with:
+      "#<ActionController::RoutingError: No route matches [DELETE] \"/toys/1\">"
+    3. checking routes.rb for destroy.
+    4. added destroy to routes.
